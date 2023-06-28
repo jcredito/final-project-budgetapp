@@ -3,19 +3,18 @@ import bcrypt from 'bcrypt';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import {
-  createUser,
-  getUserByUsername,
+  getUserWithPasswordHashByUsername,
   User,
 } from '../../../../database/users';
-import { secureCookieOptions } from '../../../../util/cookies';
-import { cookies } from 'next/headers';
 import { createSession } from '../../../../database/sessions';
+import { cookies } from 'next/headers';
+import { secureCookieOptions } from '../../../../util/cookies';
 
 type Error = {
   error: string;
 };
 
-export type RegisterResponseBodyPost =
+export type LoginResponseBodyPost =
   | {
       user: User;
     }
@@ -23,7 +22,6 @@ export type RegisterResponseBodyPost =
 
 // to validate the user data
 const userSchema = z.object({
-  email: z.string().min(1),
   username: z.string().min(1),
   password: z.string().min(1),
   // reInsertPassword: z.string().min(1),
@@ -31,7 +29,7 @@ const userSchema = z.object({
 
 export async function POST(
   request: NextRequest,
-): Promise<NextResponse<RegisterResponseBodyPost>> {
+): Promise<NextResponse<LoginResponseBodyPost>> {
   const body = await request.json();
 
   // 1. get credentials from the body
@@ -51,49 +49,47 @@ export async function POST(
     );
   }
 
-  if (await getUserByUsername(result.data.username)) {
+  // 3. verify the user's credentials
+  const userWithPasswordHash = await getUserWithPasswordHashByUsername(
+    result.data.username,
+  );
+
+  // if UserWithPasswordHash is undefine
+  if (!userWithPasswordHash) {
     // zod send you details about the error
     // console.log(result.error);
     return NextResponse.json(
       {
-        error: 'username is already used',
+        error: 'user or password not valid',
       },
-      // bad response
-      { status: 406 },
+
+      { status: 401 },
     );
   }
 
   // 3. hash the password
-  const passwordHash = await bcrypt.hash(result.data.password, 10);
-
-  // 4. store the credentials in the db
-
-  const newUser = await createUser(
-    result.data.email,
-    result.data.username,
-    passwordHash,
+  const isPasswordValid = await bcrypt.compare(
+    result.data.password,
+    userWithPasswordHash.passwordHash,
   );
 
-  if (!newUser) {
-    // zod send you details about the error
-    // console.log(result.error);
+  if (!isPasswordValid) {
     return NextResponse.json(
       {
-        error: 'Error creating the new user',
+        error: 'user or password not valid',
       },
-
-      { status: 500 },
+      { status: 401 },
     );
   }
+  // done with credentials verification
+  // We are sure the user is authenticated
 
-  //when the user is created
-
-  // 5. now we Create a token
+  // 4. now we Create a token
   // crypto.randomBytes - creates strong random data
   const token = crypto.randomBytes(100).toString('base64');
 
-  // 6. Create the session record with token and userid
-  const session = await createSession(token, newUser.id);
+  // 5. Create the session record with token and userid
+  const session = await createSession(token, userWithPasswordHash.id);
 
   if (!session) {
     return NextResponse.json(
@@ -104,7 +100,7 @@ export async function POST(
     );
   }
 
-  // 7. Send the new cookie in the headers
+  // 6. Send the new cookie in the headers
   //  we use cookies().set,
   // then we pass maxAge property to cookies to destroy itself
   cookies().set({
@@ -113,6 +109,15 @@ export async function POST(
     ...secureCookieOptions,
   });
 
-  // 8. return the new user to the client
-  return NextResponse.json({ user: newUser });
+  return NextResponse.json(
+    {
+      user: {
+        username: userWithPasswordHash.username,
+        id: userWithPasswordHash.id,
+      },
+    },
+    {
+      status: 200,
+    },
+  );
 }

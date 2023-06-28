@@ -1,19 +1,23 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { getValidSessionByToken } from '../../../database/sessions';
-import RegisterForm from './RegisterForm';
+import LoginForm from './LoginForm';
 
-export default async function RegisterPage() {
+type Props = { searchParams: { returnTo?: string | string[] } };
+
+export default async function LoginPage({ searchParams }: Props) {
   // if the user is logged in redirect
 
-  // 1. Check if the sessionToken cookie exit
+  // 1. Check if the sessionToken cookie exist
   const sessionTokenCookie = cookies().get('sessionToken');
   // 2. check if the sessionToken has a valid session
   const session =
     sessionTokenCookie &&
     (await getValidSessionByToken(sessionTokenCookie.value));
 
-  // 3. Either redirect or render the login form
+  // 3. Either redirect to home or render the login form
   if (session) redirect('/');
-  return <RegisterForm />;
+
+  console.log('My search params', searchParams);
+  return <LoginForm returnTo={searchParams.returnTo} />;
 }

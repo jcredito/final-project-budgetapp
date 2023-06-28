@@ -3,14 +3,15 @@ import { Sql } from 'postgres';
 export type User = {
   id: number;
   username: string;
-  password_hash: string;
+  email: string;
 };
 
 export async function up(sql: Sql) {
   await sql`
   CREATE TABLE users (
     id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    username varchar(80) NOT NULL,
+    email varchar(80) NOT NULL UNIQUE,
+    username varchar(80) NOT NULL UNIQUE,
     password_hash varchar(80) NOT NULL
   ) `;
 }

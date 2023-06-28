@@ -7,6 +7,17 @@
   min-height: 100vh;
 }
 
+.hero {
+  position: relative;
+  text-align: center;
+}
+
+.hero img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+}
+
 .description {
   display: inherit;
   justify-content: inherit;
