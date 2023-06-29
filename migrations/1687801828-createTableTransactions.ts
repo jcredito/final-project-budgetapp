@@ -2,12 +2,12 @@ import { Sql } from 'postgres';
 
 // TS language camelcase
 export type Transaction = {
-  id: number;
-  categoryId?: number;
+  id: number | null;
   userId: number;
   amount: number;
   note: string;
   type: string;
+  categoryId?: number;
 };
 
 export async function up(sql: Sql) {
@@ -15,7 +15,8 @@ export async function up(sql: Sql) {
   await sql`
 CREATE TABLE transactions (
 id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-category_id integer,
+date DATE NOT NULL DEFAULT NOW(),
+category_id varchar(200),
 user_id integer,
 amount decimal(10,2),
 note text,

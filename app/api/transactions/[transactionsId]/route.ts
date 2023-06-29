@@ -1,20 +1,26 @@
+import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import { getValidSessionByToken } from '../../../database/sessions';
 import {
-  deleteAnimalById,
-  getAnimalById,
-  updateAnimalById,
-} from '../../../../database/animals';
-import { Animal, Error } from '../route';
+  createTransaction,
+  getTransactionsForUser,
+} from '../../../database/transactions';
+import { Transaction } from '../../../migrations/1687801828-createTableTransactions';
 
-type ExpenseResponseBodyGet = { animal: Animal } | Error;
-type ExpenseResponseBodyDelete = { animal: Animal } | Error;
-type ExpenseResponseBodyPut = { animal: Animal } | Error;
+export type Error = {
+  error: string;
+};
 
-const animalSchema = z.object({
-  firstName: z.string(),
+type TransactionsResponseBodyGet = { transactions: Transaction[] } | Error;
+type TransactionsResponseBodyPost = { transaction: Transaction } | Error;
+
+const transactionSchema = z.object({
+  userId: z.number(),
+  amount: z.number(),
   type: z.string(),
-  accessory: z.string().optional(),
+  note: z.string(),
+  categoryId: z.number().optional(),
 });
 
 export async function GET(
@@ -104,24 +110,24 @@ export async function PUT(
       { status: 400 },
     );
   }
-  // query the database to update the animal
-  const animal = await updateAnimalById(
-    animalId,
-    result.data.firstName,
-    result.data.type,
-    result.data.accessory,
-  );
+//   // query the database to update the animal
+//   const animal = await updateAnimalById(
+//     animalId,
+//     result.data.firstName,
+//     result.data.type,
+//     result.data.accessory,
+//   );
 
-  if (!animal) {
-    return NextResponse.json(
-      {
-        error: 'Animal Not Found',
-      },
-      { status: 404 },
-    );
-  }
+//   if (!animal) {
+//     return NextResponse.json(
+//       {
+//         error: 'Animal Not Found',
+//       },
+//       { status: 404 },
+//     );
+//   }
 
-  return NextResponse.json({
-    animal: animal,
-  });
-}
+//   return NextResponse.json({
+//     animal: animal,
+//   });
+// }

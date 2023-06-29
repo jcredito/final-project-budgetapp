@@ -16,10 +16,12 @@ type TransactionsResponseBodyGet = { transactions: Transaction[] } | Error;
 type TransactionsResponseBodyPost = { transaction: Transaction } | Error;
 
 const transactionSchema = z.object({
-  amount: z.string(),
-  type: z.string(),
-  note: z.string().optional(),
   date: z.string(),
+  userId: z.number(),
+  amount: z.number(),
+  type: z.string(),
+  note: z.string(),
+  categoryId: z.string().optional(),
 });
 
 export async function GET(
@@ -43,7 +45,7 @@ export async function GET(
   }
 
   const transactions = await getTransactionsForUser(session.user_id);
-  // console.log('check', transactions);
+  console.log('check', transactions);
 
   return NextResponse.json({ transactions: transactions });
 }
@@ -66,7 +68,9 @@ export async function POST(
       { status: 401 },
     );
   }
+  //@TODO handle empty body
   const body = await request.json();
+  console.log(body);
 
   // zod please verify the body matches my schema
   const result = transactionSchema.safeParse(body);
@@ -81,12 +85,15 @@ export async function POST(
       { status: 400 },
     );
   }
+  console.log('session', session, result.data);
   // query the database to get all the transactions
   const transaction = await createTransaction(
+    result.data.date,
+    session.userId,
     result.data.amount,
-    result.data.type,
     result.data.note,
-    result.data.,
+    result.data.type,
+    result.data.categoryId ?? null,
   );
 
   if (!transaction) {
