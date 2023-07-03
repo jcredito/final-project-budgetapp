@@ -13,34 +13,84 @@ export const getTransactionsForUser = cache(async (user_id: number) => {
 
   return transactions;
 });
-// export const getTransactionlById = cache(async (id: number) => {
-//   const [transaction] = await sql<Transaction[]>`
-//     SELECT
-//       *
-//     FROM
-//     transactions
-//     WHERE
-//       id = ${id}
-//   `;
-//   return transaction;
-// });
+
+export const getTransactionList = cache(async () => {
+  const transactions = await sql<Transaction[]>`
+    SELECT
+      *
+    FROM
+    transactions
+  `;
+  return transactions;
+});
+
+export const getTransactionById = cache(async (id: number) => {
+  const [transaction] = await sql<Transaction[]>`
+    SELECT
+      *
+    FROM
+      transactions
+    WHERE
+      id = ${id}
+  `;
+  return transaction;
+});
+
+export const deleteTransactionById = cache(async (id: number) => {
+  const [transaction] = await sql<Transaction[]>`
+    DELETE FROM
+    transactions
+    WHERE
+      id = ${id}
+    RETURNING *
+  `;
+  return transaction;
+});
 
 export const createTransaction = cache(
   async (
     date: string,
     userId: number,
     amount: number,
-    note: string,
+    category: string,
     type: string,
-    categoryId: string | null,
+    note: string | null,
   ) => {
-    const [newTransaction] = await sql<Transaction[]>`
+    const [transaction] = await sql<Transaction[]>`
   INSERT INTO transactions
-  (date, category_id, user_id, amount, note, type)
-  VALUES (${date}, ${categoryId}, ${userId}, ${amount}, ${note}, ${type})
+  (date, user_id, amount, category, type, note)
+  VALUES (${date}, ${userId}, ${amount},  ${category}, ${type}, ${note})
   RETURNING *
   `;
 
-    return newTransaction;
+    return transaction;
+  },
+);
+
+export const updateTransactionById = cache(
+  async (
+    id: number,
+    date: string,
+    userId: number,
+    amount: number,
+    category: string,
+    type: string,
+    note?: string,
+  ) => {
+    const [transaction] = await sql<Transaction[]>`
+      UPDATE transactions
+      SET
+       date = ${date},
+       user_id = ${userId},
+       amount = ${amount},
+       category = ${category},
+       type = ${type},
+       note = ${note || null}
+      WHERE
+        id = ${id}
+        RETURNING *
+    `;
+
+    return transaction;
   },
 );

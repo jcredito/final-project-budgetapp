@@ -6,7 +6,19 @@
   width: 500px;
   height: auto;
 }
-
+.formBox {
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+  align-items: center;
+}
 .form {
   border: blue 2 solid;
+}
+
+.outputBox {
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+  align-items: center;
 }

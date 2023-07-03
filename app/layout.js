@@ -25,9 +25,13 @@ export default async function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <nav>
+          <div>
+            <Link href="/">Home</Link>
+          </div>
           <div className={styles.nav2}>
             {user ? (
               <>
+                <Link href="/ProfileUsernamePage">Profile</Link>
                 <div>{user.username}</div>
                 <LogoutButton />
               </>

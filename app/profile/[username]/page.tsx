@@ -1,11 +1,14 @@
 import { notFound } from 'next/navigation';
-import { getTransactionsForUser } from '../../../database/transactions';
+import {
+  getTransactionList,
+  getTransactionsForUser,
+} from '../../../database/transactions';
 import { getUserByUsername } from '../../../database/users';
 import TransactionsForm from '../../Components/TransactionsForm';
 import styles from './page.module.scss';
 
 type Props = {
-  params: { username: string };
+  params: { username: string; date: string };
 };
 export default async function ProfileUsernamePage({ params }: Props) {
   const user = await getUserByUsername(params.username);
@@ -15,24 +18,14 @@ export default async function ProfileUsernamePage({ params }: Props) {
   }
 
   const transactions = await getTransactionsForUser(user.id);
+
+  const transactionList = await getTransactionList();
+  console.log('check', transactionList);
   return (
     <div>
-      {transactions.map((transaction) => {
-        return (
-          <div>
-            <div>id: {user.id}</div>
-            <div>username: {user.username}</div>
-
-            <TransactionsForm userId={user.id} />
-            {/* <div className={styles.transactionsList}>Transactions List</div>
-             */}
-            <div
-              key={`transaction-div-${transaction.id}`}
-              data-test-id={`transaction-type-${transaction.type}`}
-            ></div>
-          </div>
-        );
-      })}
+      <div>id: {user.id}</div>
+      <div>username: {user.username}</div>
+      <TransactionsForm userId={user.id} transactions={transactions} />
     </div>
   );
 }

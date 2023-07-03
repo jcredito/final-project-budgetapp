@@ -12,21 +12,23 @@ export type Error = {
   error: string;
 };
 
-type TransactionsResponseBodyGet = { transactions: Transaction[] } | Error;
+type TransactionsResponseBodyGet = { transactions: Transaction } | Error;
 type TransactionsResponseBodyPost = { transaction: Transaction } | Error;
 
 const transactionSchema = z.object({
   date: z.string(),
   userId: z.number(),
   amount: z.number(),
+  category: z.string(),
   type: z.string(),
-  note: z.string(),
-  categoryId: z.string().optional(),
+  note: z.string().optional(),
 });
 
 export async function GET(
   request: NextRequest,
 ): Promise<NextResponse<TransactionsResponseBodyGet>> {
+  // const { searchParams } = new URL(request.url);
+
   // 1. get the token from the cookie
   const sessionTokenCookie = cookies().get('sessionToken');
 
@@ -45,7 +47,7 @@ export async function GET(
   }
 
   const transactions = await getTransactionsForUser(session.user_id);
-  console.log('check', transactions);
+  // console.log('check', transactions);
 
   return NextResponse.json({ transactions: transactions });
 }
@@ -85,15 +87,15 @@ export async function POST(
       { status: 400 },
     );
   }
-  console.log('session', session, result.data);
+  // console.log('session', session, result.data);
   // query the database to get all the transactions
   const transaction = await createTransaction(
     result.data.date,
     session.userId,
     result.data.amount,
-    result.data.note,
+    result.data.category,
     result.data.type,
-    result.data.categoryId ?? null,
+    result.data.note || null,
   );
 
   if (!transaction) {
