@@ -11,7 +11,6 @@ import styles from './LoginForm.module.scss';
 type Props = { returnTo?: string | string[] };
 
 export default function LoginForm(props: Props) {
-  //const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   // start with undefined
@@ -38,7 +37,7 @@ export default function LoginForm(props: Props) {
 
     router.push(
       getSafeReturnToPath(props.returnTo) ||
-        (`/profile/${data.user.username}` as Route),
+        (`/profile/` as Route),
     );
     // we may have in the future revalidatePath()
     router.refresh();

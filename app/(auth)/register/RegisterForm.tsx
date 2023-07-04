@@ -32,7 +32,7 @@ export default function RegisterForm() {
     }
 
     console.log(data.user);
-    router.push(`/profile/${data.user.username}`);
+    router.push(`/profile`);
     // we may have in the future revalidatePath()
     router.refresh();
   }
@@ -41,16 +41,10 @@ export default function RegisterForm() {
     <>
       <div className="mt-52 p-6 flex items-center justify-center">
         <div className="max-w-xs">
-          <form
-            className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-            onSubmit={(event) => event.preventDefault()}
-          >
+          <form onSubmit={(event) => event.preventDefault()}>
             <div className="mb-4">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="email"
-              >
-                E-mail
+              <label className=" ay-700 text-sm font-bold mb-2" htmlFor="email">
+                Email address
               </label>
               <input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -93,24 +87,7 @@ export default function RegisterForm() {
                 onChange={(event) => setPassword(event.currentTarget.value)}
               />
             </div>
-            <div className="mb-6">
-              {/* <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="password"
-              >
-                Reinsert Password
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                id="password"
-                type="password"
-                placeholder="******************"
-                value={reInsertPassword}
-                onChange={(event) =>
-                  setReInsertPassword(event.currentTarget.value)
-                }
-              /> */}
-            </div>
+
             <div className="flex items-center justify-center">
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

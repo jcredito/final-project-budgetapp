@@ -36,10 +36,10 @@ export default async function RootLayout({ children }) {
                 <LogoutButton />
               </>
             ) : (
-              <>
+              <div>
                 <Link href="/register">register</Link>
                 <Link href="/login">login</Link>
-              </>
+              </div>
             )}
           </div>
         </nav>

@@ -3,7 +3,7 @@ import { Sql } from 'postgres';
 // TS language camelcase
 export type Transaction = {
   id: number | undefined;
-  date: string;
+  date: Date;
   userId: number;
   amount: number;
   category: string;

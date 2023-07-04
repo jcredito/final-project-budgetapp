@@ -1,5 +1,6 @@
 'use client';
 
+import moment from 'moment';
 import { useState } from 'react';
 import { Transaction } from '../../migrations/1687801828-createTableTransactions';
 // import { getUserBySessionToken } from '../../database/users';
@@ -13,7 +14,7 @@ type Props = {
 
 export default function TransactionsForm({ userId, transactions }: Props) {
   const [transactionList, setTransactionList] = useState(transactions);
-  const [transactionDate, setTransactionDate] = useState('');
+  const [transactionDate, setTransactionDate] = useState(Date());
   const [amountInput, setAmountInput] = useState(0);
   const [categoryInput, setCategoryInput] = useState('');
   const [typeInput, setTypeInput] = useState('');
@@ -21,7 +22,7 @@ export default function TransactionsForm({ userId, transactions }: Props) {
   const [onEditId, setOnEditId] = useState<number>();
 
   // only for edit inputs
-  const [onEditTransactionDate, setOnEditTransactionDate] = useState('');
+  const [onEditTransactionDate, setOnEditTransactionDate] = useState(Date);
   const [onEditAmountInput, setOnEditAmountInput] = useState(0);
   const [onEditCategoryInput, setOnEditCategoryInput] = useState('');
   const [onEditTypeInput, setOnEditTypeInput] = useState('');
@@ -47,11 +48,16 @@ export default function TransactionsForm({ userId, transactions }: Props) {
       }),
     });
     const data = await response.json();
-
+    setTransactionDate('');
+    setAmountInput(0);
+    setCategoryInput('');
+    setTypeInput('');
+    setNoteInput('');
     // 3 steps to update a State
     // 1  set it
     // 2 make a copy, use ...transactionList
     // 3 use an array for updating list
+    data.transaction.date = new Date(data.transaction.date);
     setTransactionList([...transactionList, data.transaction]);
   }
 
@@ -66,6 +72,31 @@ export default function TransactionsForm({ userId, transactions }: Props) {
       transactionList.filter(
         (transaction) => transaction.id !== data.transaction.id,
       ),
+    );
+  }
+
+  async function updateTransactionById(id: number) {
+    const response = await fetch(`/api/transactions/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        userId,
+        date: onEditTransactionDate,
+        amount: onEditAmountInput,
+        category: onEditCategoryInput,
+        type: onEditTypeInput,
+        note: onEditNoteInput,
+      }),
+    });
+
+    const data = await response.json();
+    data.transaction.date = new Date(data.transaction.date);
+    setTransactionList(
+      transactionList.map((transaction) => {
+        if (transaction.id === data.transaction.id) {
+          return data.transaction;
+        }
+        return transaction;
+      }),
     );
   }
 
@@ -134,6 +165,8 @@ export default function TransactionsForm({ userId, transactions }: Props) {
             <h3> Enter your first transaction </h3>
           ) : (
             transactionList.map((transaction) => {
+              const transactionId: number = transaction.id ?? 0;
+              console.log('TRANSACTION!!!', transaction);
               return (
                 <div
                   className={styles.transactionBox}
@@ -144,7 +177,7 @@ export default function TransactionsForm({ userId, transactions }: Props) {
                     <input
                       value={
                         transaction.id !== onEditId
-                          ? transaction.date
+                          ? moment(transaction.date).format('YYYY-MM-DD')
                           : onEditTransactionDate
                       }
                       onChange={(event) =>
@@ -215,7 +248,14 @@ export default function TransactionsForm({ userId, transactions }: Props) {
                     Note
                   </label>
                   {transaction.id === onEditId ? (
-                    <button onClick={() => setOnEditId(undefined)}>save</button>
+                    <button
+                      onClick={async () => {
+                        setOnEditId(undefined);
+                        await updateTransactionById(transactionId);
+                      }}
+                    >
+                      save
+                    </button>
                   ) : (
                     <button
                       onClick={() => {
@@ -232,7 +272,7 @@ export default function TransactionsForm({ userId, transactions }: Props) {
                   )}
                   <button
                     onClick={async () =>
-                      await deleteTransactionById(transaction.id)
+                      await deleteTransactionById(transactionId)
                     }
                   >
                     x

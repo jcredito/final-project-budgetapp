@@ -12,11 +12,11 @@ export type Error = {
   error: string;
 };
 
-type TransactionsResponseBodyGet = { transactions: Transaction } | Error;
+type TransactionsResponseBodyGet = { transactions: Transaction[] } | Error;
 type TransactionsResponseBodyPost = { transaction: Transaction } | Error;
 
 const transactionSchema = z.object({
-  date: z.string(),
+  date: z.date(),
   userId: z.number(),
   amount: z.number(),
   category: z.string(),
@@ -45,8 +45,8 @@ export async function GET(
       { status: 401 },
     );
   }
-
-  const transactions = await getTransactionsForUser(session.user_id);
+  console.log(session);
+  const transactions = await getTransactionsForUser(session.userId);
   // console.log('check', transactions);
 
   return NextResponse.json({ transactions: transactions });
@@ -73,7 +73,7 @@ export async function POST(
   //@TODO handle empty body
   const body = await request.json();
   console.log(body);
-
+  body.date = new Date(body.date);
   // zod please verify the body matches my schema
   const result = transactionSchema.safeParse(body);
 

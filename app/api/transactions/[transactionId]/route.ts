@@ -1,5 +1,7 @@
+import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import { getValidSessionByToken } from '../../../../database/sessions';
 import {
   deleteTransactionById,
   getTransactionById,
@@ -27,7 +29,7 @@ type TransactionResponseBodyDelete = { transaction: Transaction } | Error;
 type TransactionResponseBodyPut = { transaction: Transaction } | Error;
 
 const transactionSchema = z.object({
-  date: z.string(),
+  date: z.date(),
   userId: z.number(),
   amount: z.number(),
   category: z.string(),
@@ -99,7 +101,21 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Record<string, string | string[]> },
 ): Promise<NextResponse<TransactionResponseBodyPut>> {
+  console.log('PUT');
   const transactionId = Number(params.transactionId);
+  const sessionTokenCookie = cookies().get('sessionToken');
+  const session =
+  sessionTokenCookie &&
+  (await getValidSessionByToken(sessionTokenCookie.value));
+
+if (!session) {
+  return NextResponse.json(
+    {
+      error: 'session token is not valid',
+    },
+    { status: 401 },
+  );
+}
   //@TODO handle empty body
   const body = await request.json();
 
@@ -111,10 +127,11 @@ export async function PUT(
       { status: 400 },
     );
   }
-
+  body.date = new Date(body.date);
+  body.amount = parseInt(body.amount);
   // zod please verify the body matches my schema
   const result = transactionSchema.safeParse(body);
-
+  console.log(body, result);
   if (!result.success) {
     // zod send you details about the error
     // console.log(result.error);
@@ -128,8 +145,8 @@ export async function PUT(
   // console.log('session', session, result.data);
   // query the database to get all the transactions
   const transaction = await updateTransactionById(
-    session.userId,
     transactionId,
+    session.userId,
     result.data.date,
     result.data.amount,
     result.data.category,

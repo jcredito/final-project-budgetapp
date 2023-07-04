@@ -49,7 +49,7 @@ export const deleteTransactionById = cache(async (id: number) => {
 
 export const createTransaction = cache(
   async (
-    date: string,
+    date: Date,
     userId: number,
     amount: number,
     category: string,
@@ -70,13 +70,14 @@ export const createTransaction = cache(
 export const updateTransactionById = cache(
   async (
     id: number,
-    date: string,
     userId: number,
+    date: Date,
     amount: number,
     category: string,
     type: string,
     note?: string,
   ) => {
+    console.log('params updateTransactionById::', date, userId);
     const [transaction] = await sql<Transaction[]>`
       UPDATE transactions
       SET
