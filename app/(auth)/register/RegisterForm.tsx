@@ -39,7 +39,7 @@ export default function RegisterForm() {
 
   return (
     <>
-      <div className="mt-52 p-6 flex items-center justify-center">
+      <div className="mt-30 p-6 flex items-center justify-center">
         <div className="max-w-xs">
           <form onSubmit={(event) => event.preventDefault()}>
             <div className="mb-4">

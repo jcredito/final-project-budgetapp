@@ -2,9 +2,7 @@
 
 import moment from 'moment';
 import { useState } from 'react';
-import { Transaction } from '../../migrations/1687801828-createTableTransactions';
-// import { getUserBySessionToken } from '../../database/users';
-// import { Transaction } from '../../migrations/1687801828-createTableTransactions';
+import { Transaction } from '../../../migrations/1687801828-createTableTransactions';
 import styles from './TransactionsForm.module.scss';
 
 type Props = {
@@ -101,14 +99,18 @@ export default function TransactionsForm({ userId, transactions }: Props) {
   }
 
   return (
-    <div className={styles.pageBox}>
-      <div className={styles.formBox}>
-        <h1> New Transaction </h1>
+    <div className="mt-10 mb-10 flex justify-center">
+      <div className="">
+        <h1 className="mb-10 flex justify-center "> New Transaction </h1>
 
-        <div className={styles.form}>
-          <label>
+        <form
+          className="ml-2px w-auto flex"
+          onSubmit={(event) => event.preventDefault()}
+        >
+          <label className="font-bold">
             Date
             <input
+              className="flex"
               type="date"
               value={transactionDate}
               onChange={(event) => {
@@ -116,9 +118,11 @@ export default function TransactionsForm({ userId, transactions }: Props) {
               }}
             />
           </label>
-          <label>
+          <label className="font-bold">
             Amount
             <input
+              className="flex border-gray-500 rounded-lg
+              w-fit"
               value={amountInput}
               onChange={(event) => {
                 setAmountInput(parseInt(event.currentTarget.value));
@@ -126,9 +130,10 @@ export default function TransactionsForm({ userId, transactions }: Props) {
             />
           </label>
 
-          <label>
+          <label className="font-bold">
             Category
             <input
+              className="flex"
               value={categoryInput}
               onChange={(event) => {
                 setCategoryInput(event.currentTarget.value);
@@ -136,9 +141,10 @@ export default function TransactionsForm({ userId, transactions }: Props) {
             />
           </label>
 
-          <label>
+          <label className="font-bold">
             Type
             <input
+              className="flex"
               value={typeInput}
               onChange={(event) => {
                 setTypeInput(event.currentTarget.value);
@@ -146,9 +152,10 @@ export default function TransactionsForm({ userId, transactions }: Props) {
             />
           </label>
 
-          <label>
+          <label className="font-bold">
             Note
             <input
+              className="flex border-1 width-min"
               value={noteInput}
               onChange={(event) => {
                 setNoteInput(event.currentTarget.value);
@@ -156,11 +163,16 @@ export default function TransactionsForm({ userId, transactions }: Props) {
             />
           </label>
 
-          <button onClick={async () => await createTransaction()}>add</button>
-        </div>
+          <button
+            onClick={async () => await createTransaction()}
+            className="rounded-full border-black-700"
+          >
+            add
+          </button>
+        </form>
         {/* *****OUTPUT***** */}
         <div className={styles.outputBox}>
-          <h2> Transaction List</h2>
+          <h2 className="m-5 flex justify-center">Transaction List</h2>
           {transactionList === undefined ? (
             <h3> Enter your first transaction </h3>
           ) : (
@@ -169,114 +181,114 @@ export default function TransactionsForm({ userId, transactions }: Props) {
               console.log('TRANSACTION!!!', transaction);
               return (
                 <div
-                  className={styles.transactionBox}
+                  className="flex mt-5 "
                   key={`transaction-inputs-${transaction.id}`}
                   data-test-id="transaction"
                 >
-                  <label>
-                    <input
-                      value={
-                        transaction.id !== onEditId
-                          ? moment(transaction.date).format('YYYY-MM-DD')
-                          : onEditTransactionDate
-                      }
-                      onChange={(event) =>
-                        setOnEditTransactionDate(event.currentTarget.value)
-                      }
-                      disabled={transaction.id !== onEditId}
-                    />
-                    Date
-                  </label>
-                  <label>
-                    <input
-                      value={
-                        transaction.id !== onEditId
-                          ? transaction.amount
-                          : onEditAmountInput
-                      }
-                      onChange={(event) =>
-                        setOnEditAmountInput(
-                          parseInt(event.currentTarget.value),
-                        )
-                      }
-                      disabled={transaction.id !== onEditId}
-                    />
-                    Amount
-                  </label>
-                  <label>
-                    <input
-                      value={
-                        transaction.id !== onEditId
-                          ? transaction.category
-                          : onEditCategoryInput
-                      }
-                      onChange={(event) =>
-                        setOnEditCategoryInput(event.currentTarget.value)
-                      }
-                      disabled={transaction.id !== onEditId}
-                    />
-                    Category
-                  </label>
-
-                  <label>
-                    <input
-                      value={
-                        transaction.id !== onEditId
-                          ? transaction.type
-                          : onEditTypeInput
-                      }
-                      onChange={(event) =>
-                        setOnEditTypeInput(event.currentTarget.value)
-                      }
-                      disabled={transaction.id !== onEditId}
-                    />
-                    Type
-                  </label>
-
-                  <label>
-                    <input
-                      value={
-                        transaction.id !== onEditId
-                          ? transaction.note || ''
-                          : onEditNoteInput
-                      }
-                      onChange={(event) =>
-                        setOnEditNoteInput(event.currentTarget.value)
-                      }
-                      disabled={transaction.id !== onEditId}
-                    />
-                    Note
-                  </label>
-                  {transaction.id === onEditId ? (
-                    <button
-                      onClick={async () => {
-                        setOnEditId(undefined);
-                        await updateTransactionById(transactionId);
-                      }}
-                    >
-                      save
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        setOnEditId(transaction.id);
-                        setOnEditTransactionDate(transaction.date);
-                        setOnEditAmountInput(transaction.amount);
-                        setOnEditCategoryInput(transaction.category);
-                        setOnEditTypeInput(transaction.type);
-                        setOnEditNoteInput(transaction.note || '');
-                      }}
-                    >
-                      edit
-                    </button>
-                  )}
-                  <button
-                    onClick={async () =>
-                      await deleteTransactionById(transactionId)
-                    }
+                  <form
+                    className="ml-2px w-auto flex"
+                    onSubmit={(event) => event.preventDefault()}
                   >
-                    x
-                  </button>
+                    <label>
+                      <input
+                        value={
+                          transaction.id !== onEditId
+                            ? moment(transaction.date).format('YYYY-MM-DD')
+                            : onEditTransactionDate
+                        }
+                        onChange={(event) =>
+                          setOnEditTransactionDate(event.currentTarget.value)
+                        }
+                        disabled={transaction.id !== onEditId}
+                      />
+                    </label>
+                    <label>
+                      <input
+                        value={
+                          transaction.id !== onEditId
+                            ? transaction.amount
+                            : onEditAmountInput
+                        }
+                        onChange={(event) =>
+                          setOnEditAmountInput(
+                            parseInt(event.currentTarget.value),
+                          )
+                        }
+                        disabled={transaction.id !== onEditId}
+                      />
+                    </label>
+                    <label>
+                      <input
+                        value={
+                          transaction.id !== onEditId
+                            ? transaction.category
+                            : onEditCategoryInput
+                        }
+                        onChange={(event) =>
+                          setOnEditCategoryInput(event.currentTarget.value)
+                        }
+                        disabled={transaction.id !== onEditId}
+                      />
+                    </label>
+
+                    <label>
+                      <input
+                        value={
+                          transaction.id !== onEditId
+                            ? transaction.type
+                            : onEditTypeInput
+                        }
+                        onChange={(event) =>
+                          setOnEditTypeInput(event.currentTarget.value)
+                        }
+                        disabled={transaction.id !== onEditId}
+                      />
+                    </label>
+
+                    <label>
+                      <input
+                        value={
+                          transaction.id !== onEditId
+                            ? transaction.note || ''
+                            : onEditNoteInput
+                        }
+                        onChange={(event) =>
+                          setOnEditNoteInput(event.currentTarget.value)
+                        }
+                        disabled={transaction.id !== onEditId}
+                      />
+                    </label>
+                    {transaction.id === onEditId ? (
+                      <button
+                        onClick={async () => {
+                          setOnEditId(undefined);
+                          await updateTransactionById(transactionId);
+                        }}
+                      >
+                        save
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          setOnEditId(transaction.id);
+                          setOnEditTransactionDate(transaction.date);
+                          setOnEditAmountInput(transaction.amount);
+                          setOnEditCategoryInput(transaction.category);
+                          setOnEditTypeInput(transaction.type);
+                          setOnEditNoteInput(transaction.note || '');
+                        }}
+                      >
+                        edit
+                      </button>
+                    )}
+                    <button
+                      onClick={async () =>
+                        await deleteTransactionById(transactionId)
+                      }
+                    >
+                      x
+                    </button>
+                  </form>
                 </div>
               );
             })
