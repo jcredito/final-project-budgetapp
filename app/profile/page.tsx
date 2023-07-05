@@ -1,13 +1,10 @@
 import { cookies } from 'next/headers';
-import { notFound, redirect } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import TransactionsForm from '../(auth)/transactions/TransactionsForm';
 import { getValidSessionByToken } from '../../database/sessions';
-import {
-  getTransactionList,
-  getTransactionsForUser,
-} from '../../database/transactions';
-import { getUserBySessionToken, getUserByUsername } from '../../database/users';
-import styles from './page.module.scss';
+import { getTransactionsForUser } from '../../database/transactions';
+import { getUserBySessionToken } from '../../database/users';
+// import styles from './page.module.scss';
 
 type Props = {
   params: { username: string; date: string };
@@ -27,13 +24,13 @@ export default async function ProfileUsernamePage() {
 
   const transactions = await getTransactionsForUser(user.id);
 
-  const transactionList = await getTransactionList();
-  // console.log('check', transactionList);
   return (
-    <div>
-      <div className='bg'>id: {user.id}</div>
-      <div>username: {user.username}</div>
-      <TransactionsForm userId={user.id} transactions={transactions} />
+    <div className="">
+      {/* <div className="">id: {user.id}</div>
+      <div>username: {user.username}</div> */}
+      <div className="">
+        <TransactionsForm userId={user.id} transactions={transactions} />
+      </div>
     </div>
   );
 }

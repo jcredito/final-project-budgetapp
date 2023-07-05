@@ -24,11 +24,11 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <nav>
-          <div>
-            <Link href="/">Home</Link>
+        <nav className={styles.navBar}>
+          <div className={styles.navLinks}>
+            <Link href="/">BudgetApp</Link>
           </div>
-          <div className={styles.nav2}>
+          <div className={styles.loginButtons}>
             {user ? (
               <>
                 <Link href="/ProfileUsernamePage">Profile</Link>
@@ -36,10 +36,14 @@ export default async function RootLayout({ children }) {
                 <LogoutButton />
               </>
             ) : (
-              <div>
-                <Link href="/register">register</Link>
-                <Link href="/login">login</Link>
-              </div>
+              <>
+                <Link className={styles.loginButton} href="/login">
+                  login
+                </Link>
+                <Link className={styles.registerButton} href="/register">
+                  register
+                </Link>
+              </>
             )}
           </div>
         </nav>

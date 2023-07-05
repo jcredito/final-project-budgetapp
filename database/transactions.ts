@@ -81,8 +81,8 @@ export const updateTransactionById = cache(
     const [transaction] = await sql<Transaction[]>`
       UPDATE transactions
       SET
-       date = ${date},
        user_id = ${userId},
+       date = ${date},
        amount = ${amount},
        category = ${category},
        type = ${type},

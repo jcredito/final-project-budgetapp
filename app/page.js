@@ -3,10 +3,11 @@ import styles from './page.module.scss';
 
 export default function HomePage() {
   return (
-    <div>
-      <section className={styles.hero}>
-        <Image src="/images/hero.png" alt="Budget" width="600" height="600" />
-        <h1>Welcome to Your Budget App</h1>
+    <section className={styles.hero}>
+      <div className={styles.heroText}>
+        <h1>
+          Welcome to <br /> Your Budget App
+        </h1>
         <h2> Money Doesn’t Have To Be Messy</h2>
         <p>
           {' '}
@@ -14,8 +15,11 @@ export default function HomePage() {
           will help you grow your savings, and you’ll love how you spend your
           money.
         </p>
-        {/* Add more content for the hero section */}
-      </section>
-    </div>
+      </div>
+      <div className={styles.heroImage}>
+        <Image src="/images/hero.png" alt="Budget" width="600" height="600" />
+      </div>
+      {/* Add more content for the hero section */}
+    </section>
   );
 }

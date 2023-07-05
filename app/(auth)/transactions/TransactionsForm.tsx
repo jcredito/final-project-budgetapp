@@ -99,18 +99,19 @@ export default function TransactionsForm({ userId, transactions }: Props) {
   }
 
   return (
-    <div className="mt-10 mb-10 flex justify-center">
+    <div className="m-50 flex justify-center px-40">
       <div className="">
         <h1 className="mb-10 flex justify-center "> New Transaction </h1>
 
         <form
-          className="ml-2px w-auto flex"
+          className="flex bg-indigo-500 space-x-20 "
           onSubmit={(event) => event.preventDefault()}
         >
           <label className="font-bold">
             Date
             <input
-              className="flex"
+              className="flex border-gray-500 rounded-lg
+               bg-indigo-200 w-32"
               type="date"
               value={transactionDate}
               onChange={(event) => {
@@ -121,8 +122,9 @@ export default function TransactionsForm({ userId, transactions }: Props) {
           <label className="font-bold">
             Amount
             <input
+              type="number"
               className="flex border-gray-500 rounded-lg
-              w-fit"
+             bg-indigo-200 w-32"
               value={amountInput}
               onChange={(event) => {
                 setAmountInput(parseInt(event.currentTarget.value));
@@ -133,7 +135,9 @@ export default function TransactionsForm({ userId, transactions }: Props) {
           <label className="font-bold">
             Category
             <input
-              className="flex"
+              type="text"
+              className="flex border-gray-500 rounded-lg
+             bg-indigo-200 w-32"
               value={categoryInput}
               onChange={(event) => {
                 setCategoryInput(event.currentTarget.value);
@@ -144,7 +148,9 @@ export default function TransactionsForm({ userId, transactions }: Props) {
           <label className="font-bold">
             Type
             <input
-              className="flex"
+              type="text"
+              className="flex border-gray-500 rounded-lg
+              bg-indigo-200 w-32"
               value={typeInput}
               onChange={(event) => {
                 setTypeInput(event.currentTarget.value);
@@ -155,7 +161,9 @@ export default function TransactionsForm({ userId, transactions }: Props) {
           <label className="font-bold">
             Note
             <input
-              className="flex border-1 width-min"
+              type="text"
+              className="flex border-gray-500 rounded-lg
+              bg-indigo-200 w-32"
               value={noteInput}
               onChange={(event) => {
                 setNoteInput(event.currentTarget.value);
@@ -164,14 +172,15 @@ export default function TransactionsForm({ userId, transactions }: Props) {
           </label>
 
           <button
-            onClick={async () => await createTransaction()}
+            type="button"
             className="rounded-full border-black-700"
+            onClick={async () => await createTransaction()}
           >
             add
           </button>
         </form>
         {/* *****OUTPUT***** */}
-        <div className={styles.outputBox}>
+        <div className="">
           <h2 className="m-5 flex justify-center">Transaction List</h2>
           {transactionList === undefined ? (
             <h3> Enter your first transaction </h3>
@@ -186,7 +195,7 @@ export default function TransactionsForm({ userId, transactions }: Props) {
                   data-test-id="transaction"
                 >
                   <form
-                    className="ml-2px w-auto flex"
+                    className="flex"
                     onSubmit={(event) => event.preventDefault()}
                   >
                     <label>

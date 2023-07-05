@@ -1,0 +1,7 @@
+import { sql } from './connect';
+import { cache } from 'react';
+
+type Category = {
+  id: number;
+  description: string;
+};
