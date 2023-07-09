@@ -59,6 +59,7 @@ export default function Profile({userId, categories, transactions, budgets} : Pr
                 categories={profileCategories}
                 budgets={profileBudgets}
                 transactionGroups={profileTransactionGroups}
+                setProfileBudgets={setProfileBudgets}
             />
             <CategoryManagement
             userId={userId}

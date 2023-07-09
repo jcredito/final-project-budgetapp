@@ -9,9 +9,10 @@ import { TransactionGroup } from '../../Models/Transaction';
 type Props = {
     budget: Budget;
     setIsEditingBudget: Dispatch<SetStateAction<boolean>>;
+    updateBudget: CallableFunction;
 };
 
-export default function BudgetManagementEdit({ budget, setIsEditingBudget }: Props) {
+export default function BudgetManagementEdit({ budget, setIsEditingBudget, updateBudget }: Props) {
     const [newBudget, setNewBudget] = useState<number>(budget.amount);
     return (
         <tr
@@ -41,7 +42,13 @@ export default function BudgetManagementEdit({ budget, setIsEditingBudget }: Pro
                                 className={styles['btn-save']}
                                 onClick={
                                     async () => {
-                                        console.log("createCategory");
+                                        updateBudget({
+                                            id: budget.id,
+                                            userId: budget.userId,
+                                            amount: newBudget,
+                                            categoryId: budget.category.id
+                                        });
+                                        setIsEditingBudget(false);
                                     }
                                 }
                             >Save</button>

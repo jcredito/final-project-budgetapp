@@ -42,14 +42,14 @@ WHERE c."user_id" = ${user_id}
 
 
 export const deleteBudgetById = cache(async (id: number) => {
-  const [transaction] = await sql<Transaction[]>`
+  const [budget] = await sql<Budget[]>`
     DELETE FROM
     budget
     WHERE
       id = ${id}
     RETURNING *
   `;
-  return transaction;
+  return budget;
 });
 
 export const createBudget = cache(

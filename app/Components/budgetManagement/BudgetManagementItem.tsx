@@ -10,9 +10,10 @@ import BudgetManagementEdit from './BudgetManagementEdit';
 type Props = {
     budget: Budget;
     transactionGroup: TransactionGroup | undefined;
+    updateBudget: CallableFunction;
 };
 
-export default function BudgetManagementItem({ budget, transactionGroup}: Props) {
+export default function BudgetManagementItem({ budget, transactionGroup, updateBudget}: Props) {
     const [isEditingBudget, setIsEditingBudget] = useState<boolean>(false);
     return (
         
@@ -36,6 +37,7 @@ export default function BudgetManagementItem({ budget, transactionGroup}: Props)
                 <BudgetManagementEdit
                 budget={budget}
                 setIsEditingBudget={setIsEditingBudget}
+                updateBudget={updateBudget}
             />
             ) 
         

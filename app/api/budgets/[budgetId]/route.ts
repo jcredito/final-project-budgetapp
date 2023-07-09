@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getValidSessionByToken } from '../../../../database/sessions';
 import {
-    updateBudgetById
+    updateBudgetById, deleteBudgetById
 } from '../../../../database/budgets';
 import { Error } from '../route';
 import { Budget } from '../../../Models/Budget';
@@ -22,7 +22,8 @@ import { Budget } from '../../../Models/Budget';
 
 // is coming from the name of the file
 
-type BudgetResponseBodyPut = { category: Budget } | Error;
+type BudgetResponseBodyPut = { budget: Budget } | Error;
+type BudgetResponseBodyDelete = { budget: Budget } | Error;
 
 const transactionSchema = z.object({
   amount: z.number(),
@@ -75,12 +76,12 @@ if (!session) {
   }
   // console.log('session', session, result.data);
   // query the database to get all the transactions
-  const category = await updateBudgetById(
+  const budget = await updateBudgetById(
     budgetId,
     result.data.amount,
   );
 
-  if (!category) {
+  if (!budget) {
     // zod send you details about the error
     // console.log(result.error);
     return NextResponse.json(
@@ -92,6 +93,36 @@ if (!session) {
   }
 
   return NextResponse.json({
-    category: category,
+    budget: budget,
   });
 }
+
+export async function DELETE(
+    request: NextRequest,
+    { params }: { params: Record<string, string | string[]> },
+  ): Promise<NextResponse<BudgetResponseBodyDelete>> {
+    const transactionId = Number(params.transactionId);
+  
+    // this prevent passing a not number
+    if (!transactionId) {
+      return NextResponse.json(
+        {
+          error: 'transaction Id is not valid',
+        },
+        { status: 400 },
+      );
+    }
+    // query the database to get all the animals
+    const budget = await deleteBudgetById(transactionId);
+  
+    if (!budget) {
+      return NextResponse.json(
+        {
+          error: 'transaction Not Found',
+        },
+        { status: 404 },
+      );
+    }
+  
+    return NextResponse.json({ budget: budget });
+  }

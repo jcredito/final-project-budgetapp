@@ -3,8 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getValidSessionByToken } from '../../../database/sessions';
 import {
-  createCategory
-} from '../../../database/categories';
+  createBudget
+} from '../../../database/budgets';
 import { Category } from '../../Models/Category';
 import { Budget } from '../../Models/Budget';
 
@@ -15,8 +15,8 @@ export type Error = {
 type BudgetResponseBodyPost = { budget: Budget } | Error;
 
 const transactionSchema = z.object({
-  name: z.string(),
-  userId: z.number(),
+  amount: z.number(),
+  category_id: z.number(),
 });
 
 export async function POST(
@@ -54,12 +54,13 @@ export async function POST(
   }
   // console.log('session', session, result.data);
   // query the database to get all the transactions
-  const category = await createCategory(
+  const budget = await createBudget(
     session.userId,
-    result.data.name
+    result.data.amount,
+    result.data.category_id
   );
 
-  if (!category) {
+  if (!budget) {
     // zod send you details about the error
     // console.log(result.error);
     return NextResponse.json(
@@ -71,6 +72,6 @@ export async function POST(
   }
 
   return NextResponse.json({
-    category: category,
+    budget: budget,
   });
 }
