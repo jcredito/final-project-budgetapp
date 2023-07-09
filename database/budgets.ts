@@ -17,6 +17,9 @@ budgets t, categories c
 WHERE t."category_id" = c."id"
 AND  t."user_id" = ${user_id}
   `;
+  if (budgetsTable.length <= 0) {
+    return [];
+  }
   const categories = await sql<Category[]>`
   SELECT
   *
@@ -44,7 +47,7 @@ WHERE c."user_id" = ${user_id}
 export const deleteBudgetById = cache(async (id: number) => {
   const [budget] = await sql<Budget[]>`
     DELETE FROM
-    budget
+    budgets
     WHERE
       id = ${id}
     RETURNING *

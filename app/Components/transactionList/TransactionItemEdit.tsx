@@ -1,5 +1,5 @@
 import { useState, SetStateAction, Dispatch, useEffect } from 'react';
-import { Transaction } from '../../Models/Transaction';
+import { Transaction, TransactionsType } from '../../Models/Transaction';
 import styles from './TransactionList.module.css';
 import moment from 'moment';
 import { Category } from '../../Models/Category';
@@ -83,15 +83,29 @@ export default function TransactionItemEdit({ transaction, setIsEditing, setEdit
                             <p className="text-gray-600 text-xs">Category</p>
                         </div>
                         <div className="w-full md:w-1/2 px-3">
-                            <input
-                                className="appearance-none block w-full text-gray-700 border border-gray-200 rounded py-3 px-4 mb-1 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-first-name"
-                                type="text"
+                            <select
+                                className='block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500'
                                 value={type}
                                 onChange={
                                     (event) => setType(event.currentTarget.value)
                                 }
-                            />
+                            >
+                                {
+                                    TransactionsType.map(
+                                        option => {
+                                            return (
+                                                <option
+                                                    value={option}
+                                                    defaultChecked={option===transaction.type}
+                                                    key={`key-${option}-type`}
+                                                >
+                                                    {option}
+                                                </option>
+                                            );
+                                        }
+                                    )
+                                }
+                            </select>
                             <p className="text-gray-600 text-xs">Type</p>
                         </div>
                     </div>

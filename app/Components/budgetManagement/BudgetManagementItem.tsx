@@ -11,9 +11,10 @@ type Props = {
     budget: Budget;
     transactionGroup: TransactionGroup | undefined;
     updateBudget: CallableFunction;
+    deleteBudget: CallableFunction;
 };
 
-export default function BudgetManagementItem({ budget, transactionGroup, updateBudget}: Props) {
+export default function BudgetManagementItem({ budget, transactionGroup, updateBudget, deleteBudget}: Props) {
     const [isEditingBudget, setIsEditingBudget] = useState<boolean>(false);
     return (
         
@@ -31,7 +32,7 @@ export default function BudgetManagementItem({ budget, transactionGroup, updateB
                     onClick={() => { setIsEditingBudget(true) }}
                 >edit</button>
             </td>
-            <td className={styles['table-cell']}><button className={styles['btn-delete']}>delete</button></td>
+            <td className={styles['table-cell']}><button className={styles['btn-delete']} onClick={async () => {deleteBudget(budget);}}>delete</button></td>
         </tr>
             ) : (
                 <BudgetManagementEdit

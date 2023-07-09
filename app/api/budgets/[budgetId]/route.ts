@@ -101,7 +101,7 @@ export async function DELETE(
     request: NextRequest,
     { params }: { params: Record<string, string | string[]> },
   ): Promise<NextResponse<BudgetResponseBodyDelete>> {
-    const transactionId = Number(params.transactionId);
+    const transactionId = Number(params.budgetId);
   
     // this prevent passing a not number
     if (!transactionId) {

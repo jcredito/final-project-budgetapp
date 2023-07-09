@@ -1,5 +1,5 @@
 import { useState, SetStateAction, Dispatch } from 'react';
-import { TransactionTable } from '../../Models/Transaction';
+import { TransactionTable, TransactionTypeIn, TransactionsType } from '../../Models/Transaction';
 import styles from './TransactionList.module.css';
 import moment from 'moment';
 import { Category } from '../../Models/Category';
@@ -12,10 +12,10 @@ type Props = {
 
 export default function TransactionItemCreate({ createTransaction, categories, setCreatingTransaction }: Props) {
     const [date, setDate] = useState<Date>(new Date());
-    const [amount, setAmount] = useState<number>();
-    const [category, setCategory] = useState<number>();
-    const [type, setType] = useState<string>();
-    const [note, setNote] = useState<string>();
+    const [amount, setAmount] = useState<number>(0);
+    const [category, setCategory] = useState<number>(categories[0]?.id ?? 0);
+    const [type, setType] = useState<string>(TransactionTypeIn);
+    const [note, setNote] = useState<string>('');
 
     return (
         <form className="w-full mt-4 p-4" onSubmit={event => event.preventDefault()}>
@@ -73,15 +73,28 @@ export default function TransactionItemCreate({ createTransaction, categories, s
                     <p className="text-gray-600 text-xs">Category</p>
                 </div>
                 <div className="w-full md:w-1/2 px-3">
-                    <input
-                        className="appearance-none block w-full text-gray-700 border border-gray-200 rounded py-3 px-4 mb-1 leading-tight focus:outline-none focus:bg-white"
-                        id="grid-first-name"
-                        type="text"
-                        value={type}
-                        onChange={
-                            (event) => setType(event.currentTarget.value)
-                        }
-                    />
+                    <select
+                                className='block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500'
+                                value={type}
+                                onChange={
+                                    (event) => setType(event.currentTarget.value)
+                                }
+                            >
+                                {
+                                    TransactionsType.map(
+                                        option => {
+                                            return (
+                                                <option
+                                                    value={option}
+                                                    key={`key-${option}-type`}
+                                                >
+                                                    {option}
+                                                </option>
+                                            );
+                                        }
+                                    )
+                                }
+                            </select>
                     <p className="text-gray-600 text-xs">Type</p>
                 </div>
             </div>

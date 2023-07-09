@@ -25,3 +25,7 @@ export type TransactionGroup = {
     category: Category;
     amount: number;
 }
+
+export const TransactionTypeIn: string = 'In';
+export const TransactionTypeOut: string = 'Out';
+export const TransactionsType: string[] = [TransactionTypeIn, TransactionTypeOut];
