@@ -7,8 +7,8 @@ import {
   getTransactionById,
   updateTransactionById,
 } from '../../../../database/transactions';
-import { Transaction } from '../../../../migrations/1687801828-createTableTransactions';
 import { Error } from '../route';
+import { Transaction } from '../../../Models/Transaction';
 
 // we need to pass an id, get from the URL
 
@@ -32,7 +32,7 @@ const transactionSchema = z.object({
   date: z.date(),
   userId: z.number(),
   amount: z.number(),
-  category: z.string(),
+  category: z.number(),
   type: z.string(),
   note: z.string().optional(),
 });

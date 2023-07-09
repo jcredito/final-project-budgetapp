@@ -104,7 +104,7 @@ export default function TransactionsForm({ userId, transactions }: Props) {
         <h1 className="mb-10 flex justify-center "> New Transaction </h1>
 
         <form
-          className="flex bg-indigo-500 space-x-20 "
+          className="flex bg-indigo-500 space-x-20 p-4 rounded-lg"
           onSubmit={(event) => event.preventDefault()}
         >
           <label className="font-bold">
@@ -171,34 +171,35 @@ export default function TransactionsForm({ userId, transactions }: Props) {
             />
           </label>
 
+          <label>
+          <br />
           <button
             type="button"
-            className="rounded-full border-black-700"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             onClick={async () => await createTransaction()}
           >
             add
           </button>
+          </label>
         </form>
         {/* *****OUTPUT***** */}
-        <div className="">
+
           <h2 className="m-5 flex justify-center">Transaction List</h2>
-          {transactionList === undefined ? (
+          { transactionList === undefined || transactionList.length === 0 ? (
             <h3> Enter your first transaction </h3>
           ) : (
             transactionList.map((transaction) => {
               const transactionId: number = transaction.id ?? 0;
               console.log('TRANSACTION!!!', transaction);
               return (
-                <div
-                  className="flex mt-5 "
-                  key={`transaction-inputs-${transaction.id}`}
-                  data-test-id="transaction"
-                >
                   <form
-                    className="flex"
+                    className="flex bg-indigo-500 space-x-20 p-4 rounded-lg"
                     onSubmit={(event) => event.preventDefault()}
+                    key={`transaction-inputs-${transaction.id}`}
+                    data-test-id="transaction"
                   >
-                    <label>
+                    <label className=''>
+                    <br />
                       <input
                         value={
                           transaction.id !== onEditId
@@ -277,7 +278,7 @@ export default function TransactionsForm({ userId, transactions }: Props) {
                         save
                       </button>
                     ) : (
-                      <button
+                      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                         onClick={() => {
                           setOnEditId(transaction.id);
                           setOnEditTransactionDate(transaction.date);
@@ -290,7 +291,7 @@ export default function TransactionsForm({ userId, transactions }: Props) {
                         edit
                       </button>
                     )}
-                    <button
+                    <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
                       onClick={async () =>
                         await deleteTransactionById(transactionId)
                       }
@@ -298,11 +299,9 @@ export default function TransactionsForm({ userId, transactions }: Props) {
                       x
                     </button>
                   </form>
-                </div>
               );
             })
           )}
-        </div>
       </div>
     </div>
   );

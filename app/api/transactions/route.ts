@@ -6,7 +6,7 @@ import {
   createTransaction,
   getTransactionsForUser,
 } from '../../../database/transactions';
-import { Transaction } from '../../../migrations/1687801828-createTableTransactions';
+import { Transaction } from '../../Models/Transaction';
 
 export type Error = {
   error: string;
@@ -19,7 +19,7 @@ const transactionSchema = z.object({
   date: z.date(),
   userId: z.number(),
   amount: z.number(),
-  category: z.string(),
+  category_id: z.number(),
   type: z.string(),
   note: z.string().optional(),
 });
@@ -93,7 +93,7 @@ export async function POST(
     result.data.date,
     session.userId,
     result.data.amount,
-    result.data.category,
+    result.data.category_id,
     result.data.type,
     result.data.note || null,
   );

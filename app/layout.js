@@ -22,16 +22,16 @@ export default async function RootLayout({ children }) {
     : await getUserBySessionToken(sessionToken.value);
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning={true}>
       <body className={inter.className}>
-        <nav className={styles.navBar}>
+        <nav className={`${styles.navBar} bg-gray-200`}>
           <div className={styles.navLinks}>
             <Link href="/">BudgetApp</Link>
           </div>
-          <div className={styles.loginButtons}>
+          <div className={`${styles.loginButtons}`}>
             {user ? (
               <>
-                <Link href="/ProfileUsernamePage">Profile</Link>
+                <Link href="/profile">Profile</Link>
                 <div>{user.username}</div>
                 <LogoutButton />
               </>
