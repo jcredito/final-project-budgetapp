@@ -7,7 +7,7 @@ CREATE TABLE transactions (
 id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
 date DATE NOT NULL DEFAULT NOW(),
 user_id integer,
-amount decimal(10,2) NOT NULL,
+amount float NOT NULL,
 category_id integer,
 type text NOT NULL,
 note varchar(255)
