@@ -14,6 +14,6 @@ category_id integer
 
 export async function down(sql: Sql) {
   await sql`
-DROP TABLE transactions
+DROP TABLE budgets
 `;
 }
