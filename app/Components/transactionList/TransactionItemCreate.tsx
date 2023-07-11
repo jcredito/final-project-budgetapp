@@ -1,5 +1,5 @@
-import { useState, SetStateAction, Dispatch } from 'react';
-import { TransactionTable, TransactionTypeIn, TransactionsType } from '../../Models/Transaction';
+import { useState, SetStateAction, Dispatch, useEffect } from 'react';
+import { TransactionTable, TransactionTypeOut, TransactionsType } from '../../Models/Transaction';
 import styles from './TransactionList.module.css';
 import moment from 'moment';
 import { Category } from '../../Models/Category';
@@ -13,12 +13,19 @@ type Props = {
 export default function TransactionItemCreate({ createTransaction, categories, setCreatingTransaction }: Props) {
     const [date, setDate] = useState<Date>(new Date());
     const [amount, setAmount] = useState<number>(0);
+    const [tempAmount, setTempAmount] = useState<string>('0');
     const [category, setCategory] = useState<number>(categories[0]?.id ?? 0);
-    const [type, setType] = useState<string>(TransactionTypeIn);
+    const [type, setType] = useState<string>(TransactionTypeOut);
     const [note, setNote] = useState<string>('');
 
+    useEffect(() => {
+        console.log(amount);
+        setTempAmount(amount.toFixed(2));
+      }, [amount]);
+
     return (
-        <form className="w-full mt-4 p-4" onSubmit={event => event.preventDefault()}>
+        categories.length > 0 ?
+            (<form className="w-full mt-4 p-4" onSubmit={event => event.preventDefault()}>
             <div className="flex flex-wrap -mx-3 mb-6">
                 <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                     <input
@@ -37,9 +44,18 @@ export default function TransactionItemCreate({ createTransaction, categories, s
                         className="appearance-none block w-full text-gray-700 border border-gray-200 rounded py-3 px-4 mb-1 leading-tight focus:outline-none focus:bg-white"
                         id="grid-first-name"
                         type="text"
-                        value={amount}
+                        value={tempAmount}
                         onChange={
-                            (event) => setAmount(isNaN(parseInt(event.currentTarget.value)) ? 0 : parseInt(event.currentTarget.value))
+                            (event) => setTempAmount(event.currentTarget.value)
+                        }
+                        onBlur={
+                            (event) => {
+                                if (tempAmount.match(/^\d{1,}(\.\d{0,4})?$/)) {
+                                    setAmount(parseFloat(tempAmount));
+                                } else {
+                                    setTempAmount(amount.toFixed(2));
+                                }
+                            }
                         }
                     />
                     <p className="text-gray-600 text-xs">Amount</p>
@@ -72,7 +88,7 @@ export default function TransactionItemCreate({ createTransaction, categories, s
 
                     <p className="text-gray-600 text-xs">Category</p>
                 </div>
-                <div className="w-full md:w-1/2 px-3">
+                <div className="w-full md:w-1/2 px-3 hidden">
                     <select
                                 className='block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500'
                                 value={type}
@@ -130,6 +146,11 @@ export default function TransactionItemCreate({ createTransaction, categories, s
                     <button className={styles['btn-cancel']} onClick={() => { setCreatingTransaction(false) }}>Cancel</button>
                 </div>
             </div>
-        </form>
+        </form>) : (
+            <div>
+                <h3>No category available. Please create a new one.</h3>
+                <button className={styles['btn-cancel']} onClick={() => { setCreatingTransaction(false) }}>Cancel</button>
+            </div>
+        )
     )
 }

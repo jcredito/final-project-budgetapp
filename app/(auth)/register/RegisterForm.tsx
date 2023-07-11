@@ -4,7 +4,7 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { RegisterResponseBodyPost } from '../../api/(auth)/register/route';
-import styles from './RegisterForm.module.scss';
+import styles from './RegisterForm.module.css';
 
 export default function RegisterForm() {
   const [email, setEmail] = useState('');
@@ -39,9 +39,9 @@ export default function RegisterForm() {
 
   return (
     <>
-      <div className="mt-30 p-6 flex items-center justify-center">
+      <div className="mt-52 p-6 flex items-center justify-center">
         <div className="max-w-xs">
-          <form onSubmit={(event) => event.preventDefault()}>
+          <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={(event) => event.preventDefault()}>
             <div className="mb-4">
               <label className=" ay-700 text-sm font-bold mb-2" htmlFor="email">
                 Email address
@@ -97,8 +97,8 @@ export default function RegisterForm() {
               >
                 Register
               </button>
-              {error !== '' && <div className={styles.error}>{error}</div>}
             </div>
+            {error !== '' && <div className={styles['error']}>{error}</div>}
           </form>
           <p className="text-center text-gray-500 text-xs">
             &copy;2023 BudgetApp Corp. All rights reserved.

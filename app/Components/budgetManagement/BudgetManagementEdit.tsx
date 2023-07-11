@@ -13,10 +13,11 @@ type Props = {
 };
 
 export default function BudgetManagementEdit({ budget, setIsEditingBudget, updateBudget }: Props) {
-    const [newBudget, setNewBudget] = useState<number>(budget.amount);
+    const [newBudget, setNewBudget] = useState<number>(parseFloat(`${budget.amount}`));
+    const [tempNewBudget, setTempNewBudget] = useState<string>(`${budget.amount}`);
     return (
         <tr
-            key={`budget-${budget.id}`}
+            key={`budget-${budget.id}-edit`}
         >
             <td className={styles['table-cell']}>{budget.category.name}</td>
             <td
@@ -29,9 +30,18 @@ export default function BudgetManagementEdit({ budget, setIsEditingBudget, updat
                             <input
                                 className="appearance-none block w-full text-gray-700 border border-gray-200 rounded py-3 px-4 mb-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                 type="text"
-                                value={newBudget}
+                                value={tempNewBudget}
                                 onChange={
-                                    (event) => {setNewBudget(isNaN(parseInt(event.currentTarget.value)) ? 0 : parseInt(event.currentTarget.value))}
+                                    (event) => {setTempNewBudget(event.currentTarget.value)}
+                                }
+                                onBlur={
+                                    (event) => {
+                                        if (tempNewBudget.match(/^\d{1,}(\.\d{0,4})?$/)) {
+                                            setNewBudget(parseFloat(tempNewBudget));
+                                        } else {
+                                            setTempNewBudget(newBudget.toFixed(2));
+                                        }
+                                    }
                                 }
                             />
                         </div>

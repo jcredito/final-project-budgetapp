@@ -128,7 +128,7 @@ if (!session) {
     );
   }
   body.date = new Date(body.date);
-  body.amount = parseInt(body.amount);
+  body.amount = parseFloat(body.amount);
   // zod please verify the body matches my schema
   const result = transactionSchema.safeParse(body);
   console.log(body, result);

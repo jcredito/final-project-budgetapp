@@ -28,4 +28,4 @@ export type TransactionGroup = {
 
 export const TransactionTypeIn: string = 'In';
 export const TransactionTypeOut: string = 'Out';
-export const TransactionsType: string[] = [TransactionTypeIn, TransactionTypeOut];
+export const TransactionsType: string[] = [TransactionTypeOut];

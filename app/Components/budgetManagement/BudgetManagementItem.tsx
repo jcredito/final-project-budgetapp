@@ -20,12 +20,12 @@ export default function BudgetManagementItem({ budget, transactionGroup, updateB
         
             !isEditingBudget ? (
                 <tr
-            key={`budget-${budget.id}`}
+            key={`budget-${budget.id}-item`}
         >
             <td className={styles['table-cell']}>{budget.category.name}</td>
-            <td className={styles['table-cell']}>{budget.amount}</td>
-            <td className={styles['table-cell']}>{transactionGroup?.amount ?? 0}</td>
-            <td className={styles['table-cell']}>{budget.amount - (transactionGroup?.amount ?? 0)}</td>
+            <td className={styles['table-cell']}>{parseFloat(`${budget.amount}`).toFixed(2)}</td>
+            <td className={styles['table-cell']}>{(transactionGroup?.amount ?? 0).toFixed(2)}</td>
+            <td className={styles['table-cell']}>{(budget.amount - (transactionGroup?.amount ?? 0)).toFixed(2)}</td>
             <td className={styles['table-cell']}>
                 <button
                     className={styles['btn-edit']}

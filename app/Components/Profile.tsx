@@ -25,7 +25,6 @@ export default function Profile({userId, categories, transactions, budgets} : Pr
             amount: transactions.filter(t => {if (t.category.id === cat.id) return t;}).reduce((tot, tran) =>  tot + (tran.amount*1), 0)
         }
     }));
-    console.log(transactions);
     async function refreshCategories(refreshedCategories: Category[]) {
         setProfileCategories(refreshedCategories);
     }

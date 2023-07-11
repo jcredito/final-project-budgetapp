@@ -17,12 +17,12 @@ export default function TransactionItemView({ transaction, setIsEditing, deleteT
             >{moment(transaction.date).format('YYYY-MM-DD')}</td>
             <td
                 className={styles['table-cell']}
-            >{transaction.amount}</td>
+            >{transaction.amount.toFixed(2)}</td>
             <td
                 className={styles['table-cell']}
             >{transaction.category.name}</td>
             <td
-                className={styles['table-cell']}
+                className={`${styles['table-cell']} hidden`}
             >{transaction.type}</td>
             <td
                 className={styles['table-cell']}

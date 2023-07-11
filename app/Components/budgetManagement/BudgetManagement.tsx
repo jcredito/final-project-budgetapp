@@ -7,6 +7,7 @@ import { Budget, BudgetTable } from '../../Models/Budget';
 import { TransactionGroup } from '../../Models/Transaction';
 import BudgetManagementEdit from './BudgetManagementEdit';
 import BudgetManagementItem from './BudgetManagementItem';
+import Image from 'next/image';
 
 type Props = {
     categories: Category[];
@@ -23,6 +24,7 @@ export default function BudgetManagement({ userId, categories, budgets, transact
     const [managedBudgets, setManageBudget] = useState<Budget[]>(budgets);
     const [creatingBudget, setCreatingBudget] = useState<boolean>(false);
     const [newBudget, setNewBudget] = useState<number>(0);
+    const [tempNewBudget, setTempNewBudget] = useState<string>('0');
     const [category, setCategory] = useState<number>(categories[0]?.id ?? 0);
     async function updateBudget(budget: BudgetTable) {
         if (budget.id) {
@@ -78,7 +80,7 @@ export default function BudgetManagement({ userId, categories, budgets, transact
             </div>
             {
                 !creatingBudget && (
-                    <div className='py-2 flex flex-row-reverse'>
+                    <div className='py-4 px-4 flex flex-row-reverse'>
                         <button className={styles['btn-create']} onClick={() => { setCreatingBudget(true) }}>Create budget</button>
                     </div>
                 )
@@ -89,7 +91,7 @@ export default function BudgetManagement({ userId, categories, budgets, transact
                         <div className='py-2 border-b-2 mb-4'>
                             <h3 className='font-bold'>New budget</h3>
                         </div>
-                        <form onSubmit={event => event.preventDefault()} className='flex flex-row w-full'>
+                        {categories.filter(c => !budgets.find(b => b.category.id === c.id)).length > 0 ? (<form onSubmit={event => event.preventDefault()} className='flex flex-row w-full'>
                             <div className="flex flex-wrap grow">
                                 <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                                     <select
@@ -120,9 +122,18 @@ export default function BudgetManagement({ userId, categories, budgets, transact
                                     <input
                                         className="appearance-none block w-full text-gray-700 border border-gray-200 rounded py-3 px-4 mb-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                         type="text"
-                                        value={newBudget}
+                                        value={tempNewBudget}
                                         onChange={
-                                            (event) => { setNewBudget(isNaN(parseInt(event.currentTarget.value)) ? 0 : parseInt(event.currentTarget.value)) }
+                                            (event) => { setTempNewBudget(event.currentTarget.value) }
+                                        }
+                                        onBlur={
+                                            (event) => {
+                                                if (tempNewBudget.match(/^\d{1,}(\.\d{0,4})?$/)) {
+                                                    setNewBudget(parseFloat(tempNewBudget));
+                                                } else {
+                                                    setTempNewBudget(newBudget.toFixed(2));
+                                                }
+                                            }
                                         }
                                     />
                                     <p className="text-gray-600 text-xs">Amount</p>
@@ -148,46 +159,69 @@ export default function BudgetManagement({ userId, categories, budgets, transact
                                     <button className={`${styles['btn-cancel']} max-h-12`} onClick={() => { setCreatingBudget(false); setNewBudget(0); }}>Cancel</button>
                                 </div>
                             </div>
-                        </form>
+                        </form>) : (
+                            <div>
+                                <h3>No category available. Please create a new one.</h3>
+                                <button className={`${styles['btn-cancel']} max-h-12`} onClick={() => { setCreatingBudget(false); setNewBudget(0); }}>Cancel</button>
+                            </div>
+                        )
+                        }
                     </div>
                 )
             }
-            <div>
-                <table className={styles['table']}>
-                    <thead>
-                        <tr>
-                            {
-                                budgetHeaders.map(
-                                    (title, index) => {
-                                        return (
-                                            <th
-                                                className={styles['table-title']}
-                                                key={`title-${index}-${title}`}
-                                            >{title}</th>
+            {
+                managedBudgets.length > 0 && (
+                    <div>
+                        <table className={styles['table']}>
+                            <thead>
+                                <tr>
+                                    {
+                                        budgetHeaders.map(
+                                            (title, index) => {
+                                                return (
+                                                    <th
+                                                        className={styles['table-title']}
+                                                        key={`title-${index}-${title}`}
+                                                    >{title}</th>
+                                                )
+                                            }
                                         )
                                     }
-                                )
-                            }
-                        </tr>
-                    </thead>
-                    <tbody
-                        className={styles['table-body']}
-                    >
-                        {
-                            managedBudgets.map((budget) => {
-                                return (
-                                    <BudgetManagementItem
-                                        budget={budget}
-                                        transactionGroup={transactionGroups.find(b => b.category.id === budget.category.id)}
-                                        updateBudget={updateBudget}
-                                        deleteBudget={deleteBudget}
-                                    />
-                                )
-                            })
-                        }
-                    </tbody>
-                </table>
-            </div>
+                                </tr>
+                            </thead>
+                            <tbody
+                                className={styles['table-body']}
+                            >
+                                {
+                                    managedBudgets.map((budget) => {
+                                        return (
+                                            <BudgetManagementItem
+                                                budget={budget}
+                                                transactionGroup={transactionGroups.find(b => b.category.id === budget.category.id)}
+                                                updateBudget={updateBudget}
+                                                deleteBudget={deleteBudget}
+                                                key={`budget-${budget.id}`}
+                                            />
+                                        )
+                                    })
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                )
+            }
+            {
+                managedBudgets.length === 0 && (
+                    <div className='flex items-center justify-center'>
+                        <Image
+                            src={'/images/empty-folder.png'}
+                            width={250}
+                            height={250}
+                            alt='Empty'
+                        />
+                    </div>
+                )
+            }
         </div >
     )
 }

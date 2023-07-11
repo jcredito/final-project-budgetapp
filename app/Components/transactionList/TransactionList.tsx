@@ -6,7 +6,8 @@ import { Category } from '../../Models/Category';
 import TransactionItem from './TransactionItem';
 import TransactionItemCreate from './TransactionItemCreate';
 import styles from './TransactionList.module.css';
-import CategoryManagementCreate from '../categoryManagement/CategoryManagementCreate'
+import CategoryManagementCreate from '../categoryManagement/CategoryManagementCreate';
+import Image from 'next/image';
 
 type Props = {
     transactions: Transaction[];
@@ -18,7 +19,8 @@ type Props = {
 export default function TransactionList({ userId, transactions, categories, setProfileTransactions }: Props) {
     const [transactionList, setTransactionList] = useState(transactions);
     const transactionHeaders: string[] = [
-        'Date', 'Amount', 'Category', 'Type', 'Note', '', ''
+        // 'Date', 'Amount', 'Category', 'Type', 'Note', '', ''
+        'Date', 'Amount', 'Category', 'Note', '', ''
     ];
     const [creatingTransaction, setCreatingTransaction] = useState<boolean>(false);
     async function deleteTransaction(transaction: Transaction) {
@@ -75,6 +77,12 @@ export default function TransactionList({ userId, transactions, categories, setP
             });
             const data = await response.json();
             setProfileTransactions(transactionList.map(t => {
+                if (t.id === data.transaction.id) {
+                    return data.transaction;
+                }
+                return t;
+            }));
+            setTransactionList(transactionList.map(t => {
                 if (t.id === data.transaction.id) {
                     return data.transaction;
                 }
@@ -150,6 +158,18 @@ export default function TransactionList({ userId, transactions, categories, setP
                                 }
                             </tbody>
                         </table>
+                    </div>
+                )
+            }
+            {
+                transactionList.length === 0 && (
+                    <div className='flex items-center justify-center'>
+                        <Image
+                        src={'/images/empty-folder.png'}
+                        width={250}
+                        height={250}
+                        alt='Empty'
+                        />
                     </div>
                 )
             }

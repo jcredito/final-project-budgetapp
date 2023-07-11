@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { getSafeReturnToPath } from '../../../util/validation';
 import { LoginResponseBodyPost } from '../../api/(auth)/login/route';
-import styles from './LoginForm.module.scss';
+import styles from './LoginForm.module.css';
 
 type Props = { returnTo?: string | string[] };
 
@@ -90,8 +90,8 @@ export default function LoginForm(props: Props) {
               >
                 Log in
               </button>
-              {error !== '' && <div className={styles.error}>{error}</div>}
             </div>
+            {error !== '' && <div className={styles.error}>{error}</div>}
           </form>
           <p className="text-center text-gray-500 text-xs">
             &copy;2023 BudgetApp Corp. All rights reserved.

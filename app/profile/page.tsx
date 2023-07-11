@@ -37,7 +37,7 @@ export default async function ProfileUsernamePage() {
     <div className="mt-8">
       {/* <div className="">id: {user.id}</div>
       <div>username: {user.username}</div> */}
-      <div className="max-w-screen-lg m-auto">
+      <div className="max-w-screen-lg m-auto rounded">
         {/* <CategoryManagement
           userId={user.id}
           categories={categories}

@@ -15,18 +15,19 @@ type Props = {
 export default function TransactionItemEdit({ transaction, setIsEditing, setEditingTransaction, updateTransaction, categories }: Props) {
     const [date, setDate] = useState<Date>(transaction.date);
     const [amount, setAmount] = useState<number>(transaction.amount);
+    const [tempAmount, setTempAmount] = useState<string>(transaction.amount.toFixed(2));
     const [category, setCategory] = useState<number>(transaction.category.id ?? 0);
     const [type, setType] = useState(transaction.type);
     const [note, setNote] = useState(transaction.note ?? '');
 
     useEffect(() => {
-        console.log("useEffect::TransactionItemEdit", categories);
-      }, [categories]);
+        setTempAmount(amount.toFixed(2));
+    }, [amount]);
     return (
         <tr>
             <td
                 className={styles['table-cell']}
-                colSpan={6}
+                colSpan={5}
             >
                 <form className="w-full">
                     <div className="flex flex-wrap -mx-3 mb-6">
@@ -47,9 +48,16 @@ export default function TransactionItemEdit({ transaction, setIsEditing, setEdit
                                 className="appearance-none block w-full text-gray-700 border border-gray-200 rounded py-3 px-4 mb-1 leading-tight focus:outline-none focus:bg-white"
                                 id="grid-first-name"
                                 type="text"
-                                value={amount}
-                                onChange={
-                                    (event) => setAmount(isNaN(parseInt(event.currentTarget.value)) ? 0 : parseInt(event.currentTarget.value))
+                                value={tempAmount}
+                                onChange={event => setTempAmount(event.currentTarget.value)}
+                                onBlur={
+                                    (event) => {
+                                        if (tempAmount.match(/^\d{1,}(\.\d{0,4})?$/)) {
+                                            setAmount(parseFloat(tempAmount));
+                                        } else {
+                                            setTempAmount(amount.toFixed(2));
+                                        }
+                                    }
                                 }
                             />
                             <p className="text-gray-600 text-xs">Amount</p>
@@ -70,7 +78,7 @@ export default function TransactionItemEdit({ transaction, setIsEditing, setEdit
                                             return (
                                                 <option
                                                     value={option.id}
-                                                    defaultChecked={option.id===transaction.category.id}
+                                                    defaultChecked={option.id === transaction.category.id}
                                                     key={`key-${option.id}-${option.name}`}
                                                 >
                                                     {option.name}
@@ -82,7 +90,7 @@ export default function TransactionItemEdit({ transaction, setIsEditing, setEdit
                             </select>
                             <p className="text-gray-600 text-xs">Category</p>
                         </div>
-                        <div className="w-full md:w-1/2 px-3">
+                        <div className="w-full md:w-1/2 px-3 hidden">
                             <select
                                 className='block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500'
                                 value={type}
@@ -96,7 +104,7 @@ export default function TransactionItemEdit({ transaction, setIsEditing, setEdit
                                             return (
                                                 <option
                                                     value={option}
-                                                    defaultChecked={option===transaction.type}
+                                                    defaultChecked={option === transaction.type}
                                                     key={`key-${option}-type`}
                                                 >
                                                     {option}
@@ -128,39 +136,40 @@ export default function TransactionItemEdit({ transaction, setIsEditing, setEdit
                 className={styles['table-cell']}
             >
                 <div className='flex flex-col'>
-                <button
-                    className={styles['btn-edit']}
-                    onClick={
-                        () => {
-                            setIsEditing(false);
-                            updateTransaction({
-                                ...transaction,
-                                date: date,
-                                amount: amount,
-                                categoryId: category,
-                                type: type,
-                                note: note
-                            });
-                            setEditingTransaction({
-                                ...transaction,
-                                date: date,
-                                amount: amount,
-                                category: categories.find(cat => cat.id && cat.id === (category)) ?? transaction.category,
-                                type: type,
-                                note: note
-                            })
+                    <button
+                        className={styles['btn-edit']}
+                        onClick={
+                            () => {
+                                setIsEditing(false);
+                                setTempAmount(amount.toFixed(2));
+                                updateTransaction({
+                                    ...transaction,
+                                    date: date,
+                                    amount: amount,
+                                    categoryId: category,
+                                    type: type,
+                                    note: note
+                                });
+                                setEditingTransaction({
+                                    ...transaction,
+                                    date: date,
+                                    amount: amount,
+                                    category: categories.find(cat => cat.id && cat.id === (category)) ?? transaction.category,
+                                    type: type,
+                                    note: note
+                                })
+                            }
                         }
-                    }
-                >save</button>
-                <button
-                onClick={
-                    () => {
-                        setIsEditing(false);
-                        setEditingTransaction(transaction);
-                    }
-                }
-                className={styles['btn-cancel'] + ' mt-1'}
-                >cancel</button>
+                    >save</button>
+                    <button
+                        onClick={
+                            () => {
+                                setIsEditing(false);
+                                setEditingTransaction(transaction);
+                            }
+                        }
+                        className={styles['btn-cancel'] + ' mt-1'}
+                    >cancel</button>
                 </div>
             </td>
         </tr>

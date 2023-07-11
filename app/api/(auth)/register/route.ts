@@ -74,6 +74,16 @@ export async function POST(
     passwordHash,
   );
 
+  if (newUser?.error) {
+    return NextResponse.json(
+      {
+        error: newUser?.error,
+      },
+
+      { status: 400 },
+    );
+  }
+
   if (!newUser) {
     // zod send you details about the error
     // console.log(result.error);
@@ -82,7 +92,7 @@ export async function POST(
         error: 'Error creating the new user',
       },
 
-      { status: 500 },
+      { status: 400 },
     );
   }
 

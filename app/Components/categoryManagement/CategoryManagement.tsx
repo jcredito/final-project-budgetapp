@@ -5,6 +5,7 @@ import { Category } from '../../Models/Category';
 import styles from './CategoryManagement.module.css';
 import CategoryManagementCreate from '../categoryManagement/CategoryManagementCreate'
 import CategoryManagementItem from './CategoryManagementItem';
+import Image from 'next/image';
 
 type Props = {
     categories: Category[];
@@ -80,27 +81,41 @@ export default function CategoryManagement({ userId, categories, refreshCategori
                                 </div>
                             )
                         }
-                        <div>
-                        <table className={styles['table']}>
-                            <thead>
-                                <tr>
-                                    <th className={styles['table-title']}>Name</th>
-                                    <th className={styles['table-title']}></th>
-                                </tr>
-                            </thead>
-                            <tbody
-                            className={styles['table-body']}
-                            >
-                                {
-                                    categoriesManagement.map(category => {
-                                        return (
-                                            <CategoryManagementItem category={category} userId={userId} updateCategory={updateCategory}/>
-                                        )
-                                    })
-                                }
-                            </tbody>
-                        </table>
-                        </div>
+                        {
+                            categoriesManagement.length > 0 && (                        <div>
+                                <table className={styles['table']}>
+                                    <thead>
+                                        <tr>
+                                            <th className={styles['table-title']}>Name</th>
+                                            <th className={styles['table-title']}></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody
+                                    className={styles['table-body']}
+                                    >
+                                        {
+                                            categoriesManagement.map(category => {
+                                                return (
+                                                    <CategoryManagementItem category={category} userId={userId} updateCategory={updateCategory}/>
+                                                )
+                                            })
+                                        }
+                                    </tbody>
+                                </table>
+                                </div>)
+                        }
+                        {
+                            categoriesManagement.length === 0 && (
+                                <div className='flex items-center justify-center'>
+                                <Image
+                                src={'/images/empty-folder.png'}
+                                width={250}
+                                height={250}
+                                alt='Empty'
+                                />
+                            </div>
+                            )
+                        }
                     </div>
                 )
             }

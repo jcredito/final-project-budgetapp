@@ -37,18 +37,27 @@ export const getUserByUsername = cache(async (username: string) => {
 
 export const createUser = cache(
   async (email: string, username: string, passwordHash: string) => {
-    const [user] = await sql<User[]>`
-  INSERT INTO
-  users
-  (email, username, password_hash)
-  VALUES
-  (${email}, ${username.toLowerCase()}, ${passwordHash})
-  RETURNING
-  id,
-  username
-  `;
-    return user;
-  },
+    try {
+      const [user] = await sql<User[]>`
+      INSERT INTO
+      users
+      (email, username, password_hash)
+      VALUES
+      (${email}, ${username.toLowerCase()}, ${passwordHash})
+      RETURNING
+      id,
+      username
+      `;
+        return user;
+    } catch (error: any) {
+      if (error.message === 'duplicate key value violates unique constraint "users_email_key"') {
+        return {
+          error: 'E-mail already used'
+        }
+      }
+    }
+ 
+  }
 );
 
 // we check here 1. that the token im passing has a valid session
