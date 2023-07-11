@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { getUserBySessionToken } from '../database/users';
 import styles from './layout.module.scss';
 import { LogoutButton } from './LogoutButton';
+import Image from 'next/image';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -23,16 +24,29 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="en" suppressHydrationWarning={true}>
+      <head>
+        <title>BudgetApp</title>
+        <meta name="description" content="BudgetApp for managing your spending." />
+        <link rel="icon" href="/favicon/favicon.ico" sizes="any" />
+      </head>
       <body className={inter.className}>
         <nav className={`${styles.navBar} bg-gray-200`}>
-          <div className={styles.navLinks}>
-            <Link href="/">BudgetApp</Link>
+          <div className={`flex gap-1`}>
+            <Image
+              src={'/favicon/apple-touch-icon.png'}
+              width={20}
+              height={20}
+              alt='Empty'
+            />
+            <Link href="/">
+
+              BudgetApp</Link>
           </div>
           <div className={`${styles.loginButtons}`}>
             {user ? (
               <>
                 <Link href="/profile">Profile</Link>
-                <div>{user.username}</div>
+                <div>Hi, {user.username}</div>
                 <LogoutButton />
               </>
             ) : (
