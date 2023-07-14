@@ -7,8 +7,8 @@ import {
   getTransactionById,
   updateTransactionById,
 } from '../../../../database/transactions';
-import { Error } from '../route';
 import { Transaction } from '../../../Models/Transaction';
+import { Error } from '../route';
 
 // we need to pass an id, get from the URL
 
@@ -105,17 +105,17 @@ export async function PUT(
   const transactionId = Number(params.transactionId);
   const sessionTokenCookie = cookies().get('sessionToken');
   const session =
-  sessionTokenCookie &&
-  (await getValidSessionByToken(sessionTokenCookie.value));
+    sessionTokenCookie &&
+    (await getValidSessionByToken(sessionTokenCookie.value));
 
-if (!session) {
-  return NextResponse.json(
-    {
-      error: 'session token is not valid',
-    },
-    { status: 401 },
-  );
-}
+  if (!session) {
+    return NextResponse.json(
+      {
+        error: 'session token is not valid',
+      },
+      { status: 401 },
+    );
+  }
   //@TODO handle empty body
   const body = await request.json();
 
@@ -134,7 +134,7 @@ if (!session) {
   console.log(body, result);
   if (!result.success) {
     // zod send you details about the error
-    // console.log(result.error);
+
     return NextResponse.json(
       {
         error: 'The data is incomplete',
@@ -142,7 +142,7 @@ if (!session) {
       { status: 400 },
     );
   }
-  // console.log('session', session, result.data);
+
   // query the database to get all the transactions
   const transaction = await updateTransactionById(
     transactionId,

@@ -41,7 +41,10 @@ export default function RegisterForm() {
     <>
       <div className="mt-52 p-6 flex items-center justify-center">
         <div className="max-w-xs">
-          <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={(event) => event.preventDefault()}>
+          <form
+            className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+            onSubmit={(event) => event.preventDefault()}
+          >
             <div className="mb-4">
               <label className=" ay-700 text-sm font-bold mb-2" htmlFor="email">
                 Email address
@@ -90,7 +93,7 @@ export default function RegisterForm() {
 
             <div className="flex items-center justify-center">
               <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline"
                 type="button"
                 // 1.fetch from api, after json.stringify u get the object with a controlled component (usestate)
                 onClick={async () => await register()}

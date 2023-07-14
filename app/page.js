@@ -19,7 +19,6 @@ export default function HomePage() {
       <div className={styles.heroImage}>
         <Image src="/images/hero.png" alt="Budget" width="600" height="600" />
       </div>
-      {/* Add more content for the hero section */}
     </section>
   );
 }
