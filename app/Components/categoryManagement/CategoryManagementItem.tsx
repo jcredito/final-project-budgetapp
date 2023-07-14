@@ -3,11 +3,9 @@
 import { useState } from 'react';
 import { Category } from '../../Models/Category';
 import { Transaction, TransactionTable } from '../../Models/Transaction';
+import CategoryManagementEdit from '../categoryManagement/CategoryManagementEdit';
 import styles from './CategoryManagement.module.css';
 import CategoryManagementCreate from './CategoryManagementCreate';
-import CategoryManagementEdit from './CategoryManagementEdit';
-
-// import CategoryManagementEdit from './CategoryManagementEdit';
 
 type Props = {
   category: Category;

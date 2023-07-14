@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Category } from '../../Models/Category';
 import { Transaction, TransactionTable } from '../../Models/Transaction';
-import CategoryManagementCreate from '../CategoryManagement/CategoryManagementCreate';
+import CategoryManagementCreate from '../categoryManagement/CategoryManagementCreate';
 import TransactionItem from './TransactionItem';
 import TransactionItemCreate from './TransactionItemCreate';
 import styles from './TransactionList.module.css';

@@ -3,9 +3,9 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import { Category } from '../../Models/Category';
+import CategoryManagementCreate from '../categoryManagement/CategoryManagementCreate';
+import CategoryManagementItem from '../categoryManagement/CategoryManagementItem';
 import styles from './CategoryManagement.module.css';
-import CategoryManagementCreate from './CategoryManagementCreate';
-import CategoryManagementItem from './CategoryManagementItem';
 
 type Props = {
   categories: Category[];

@@ -1,12 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import CategoryManagement from '../Components/categoryManagement/CategoryManagement';
+import TransactionList from '../Components/transactionList/TransactionList';
 import { Budget } from '../Models/Budget';
 import { Category } from '../Models/Category';
 import { Transaction, TransactionGroup } from '../Models/Transaction';
-import BudgetManagement from './BudgetManagement/budgetManagement';
-import CategoryManagement from './CategoryManagement/categoryManagement';
-import TransactionList from './TransactionList/TransactionList';
+import BudgetManagement from './budgetManagement/BudgetManagement';
 
 type Props = {
   userId: number;
