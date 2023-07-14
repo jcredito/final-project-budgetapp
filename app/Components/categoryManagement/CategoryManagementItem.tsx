@@ -7,6 +7,8 @@ import styles from './CategoryManagement.module.css';
 import CategoryManagementCreate from './CategoryManagementCreate';
 import CategoryManagementEdit from './CategoryManagementEdit';
 
+// import CategoryManagementEdit from './CategoryManagementEdit';
+
 type Props = {
   category: Category;
   userId: number;

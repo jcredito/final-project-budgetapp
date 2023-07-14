@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import { Budget } from '../Models/Budget';
 import { Category } from '../Models/Category';
 import { Transaction, TransactionGroup } from '../Models/Transaction';
-import BudgetManagement from './BudgetManagement/BudgetManagement';
-import CategoryManagement from './CategoryManagement/CategoryManagement';
+import BudgetManagement from './BudgetManagement/budgetManagement';
+import CategoryManagement from './CategoryManagement/categoryManagement';
 import TransactionList from './TransactionList/TransactionList';
 
 type Props = {
