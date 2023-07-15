@@ -29,4 +29,11 @@
       color: #244564;
     }
   }
+  .heroImage {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    padding-top: 10px;
+  }
 }
