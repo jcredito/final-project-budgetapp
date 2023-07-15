@@ -6,7 +6,7 @@ export default function HomePage() {
     <section className={styles.hero}>
       <div className={styles.heroText}>
         <h1>
-          Welcome to <br /> Your Budget App
+          Welcome to <br /> Budget App
         </h1>
         <h2> Money Doesn’t Have To Be Messy</h2>
         <p>
