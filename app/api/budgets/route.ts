@@ -1,12 +1,10 @@
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import { createBudget } from '../../../database/budgets';
 import { getValidSessionByToken } from '../../../database/sessions';
-import {
-  createBudget
-} from '../../../database/budgets';
-import { Category } from '../../Models/Category';
 import { Budget } from '../../Models/Budget';
+import { Category } from '../../Models/Category';
 
 export type Error = {
   error: string;
@@ -52,12 +50,11 @@ export async function POST(
       { status: 400 },
     );
   }
-  // console.log('session', session, result.data);
-  // query the database to get all the transactions
+
   const budget = await createBudget(
     session.userId,
     result.data.amount,
-    result.data.category_id
+    result.data.category_id,
   );
 
   if (!budget) {

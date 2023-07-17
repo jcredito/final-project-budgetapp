@@ -1,12 +1,13 @@
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { getValidSessionByToken } from '../../../../database/sessions';
 import {
-    updateBudgetById, deleteBudgetById
+  deleteBudgetById,
+  updateBudgetById,
 } from '../../../../database/budgets';
-import { Error } from '../route';
+import { getValidSessionByToken } from '../../../../database/sessions';
 import { Budget } from '../../../Models/Budget';
+import { Error } from '../route';
 
 // we need to pass an id, get from the URL
 
@@ -37,18 +38,18 @@ export async function PUT(
   const budgetId = Number(params.budgetId);
   const sessionTokenCookie = cookies().get('sessionToken');
   const session =
-  sessionTokenCookie &&
-  (await getValidSessionByToken(sessionTokenCookie.value));
+    sessionTokenCookie &&
+    (await getValidSessionByToken(sessionTokenCookie.value));
 
-if (!session) {
-  return NextResponse.json(
-    {
-      error: 'session token is not valid',
-    },
-    { status: 401 },
-  );
-}
-  //@TODO handle empty body
+  if (!session) {
+    return NextResponse.json(
+      {
+        error: 'session token is not valid',
+      },
+      { status: 401 },
+    );
+  }
+
   const body = await request.json();
 
   if (!budgetId) {
@@ -76,10 +77,7 @@ if (!session) {
   }
   // console.log('session', session, result.data);
   // query the database to get all the transactions
-  const budget = await updateBudgetById(
-    budgetId,
-    result.data.amount,
-  );
+  const budget = await updateBudgetById(budgetId, result.data.amount);
 
   if (!budget) {
     // zod send you details about the error
@@ -98,31 +96,31 @@ if (!session) {
 }
 
 export async function DELETE(
-    request: NextRequest,
-    { params }: { params: Record<string, string | string[]> },
-  ): Promise<NextResponse<BudgetResponseBodyDelete>> {
-    const transactionId = Number(params.budgetId);
-  
-    // this prevent passing a not number
-    if (!transactionId) {
-      return NextResponse.json(
-        {
-          error: 'transaction Id is not valid',
-        },
-        { status: 400 },
-      );
-    }
-    // query the database to get all the animals
-    const budget = await deleteBudgetById(transactionId);
-  
-    if (!budget) {
-      return NextResponse.json(
-        {
-          error: 'transaction Not Found',
-        },
-        { status: 404 },
-      );
-    }
-  
-    return NextResponse.json({ budget: budget });
+  request: NextRequest,
+  { params }: { params: Record<string, string | string[]> },
+): Promise<NextResponse<BudgetResponseBodyDelete>> {
+  const transactionId = Number(params.budgetId);
+
+  // this prevent passing a not number
+  if (!transactionId) {
+    return NextResponse.json(
+      {
+        error: 'transaction Id is not valid',
+      },
+      { status: 400 },
+    );
   }
+
+  const budget = await deleteBudgetById(transactionId);
+
+  if (!budget) {
+    return NextResponse.json(
+      {
+        error: 'transaction Not Found',
+      },
+      { status: 404 },
+    );
+  }
+
+  return NextResponse.json({ budget: budget });
+}

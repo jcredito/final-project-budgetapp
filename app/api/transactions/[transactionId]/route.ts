@@ -82,7 +82,7 @@ export async function DELETE(
       { status: 400 },
     );
   }
-  // query the database to get all the animals
+
   const transaction = await deleteTransactionById(transactionId);
 
   if (!transaction) {
@@ -116,7 +116,7 @@ export async function PUT(
       { status: 401 },
     );
   }
-  //@TODO handle empty body
+
   const body = await request.json();
 
   if (!transactionId) {
@@ -143,7 +143,7 @@ export async function PUT(
     );
   }
 
-  // query the database to get all the transactions
+
   const transaction = await updateTransactionById(
     transactionId,
     session.userId,

@@ -1,15 +1,15 @@
 import crypto from 'node:crypto';
 import bcrypt from 'bcrypt';
+import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import { createSession } from '../../../../database/sessions';
 import {
   createUser,
   getUserByUsername,
   User,
 } from '../../../../database/users';
 import { secureCookieOptions } from '../../../../util/cookies';
-import { cookies } from 'next/headers';
-import { createSession } from '../../../../database/sessions';
 
 type Error = {
   error: string;
@@ -26,7 +26,6 @@ const userSchema = z.object({
   email: z.string().min(1),
   username: z.string().min(1),
   password: z.string().min(1),
-  // reInsertPassword: z.string().min(1),
 });
 
 export async function POST(
